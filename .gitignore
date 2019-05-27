@@ -1,3 +1,5 @@
 /*.iml
 /app/*.iml
 /app/libs/*.aar
+/.idea/*
+/local.properties
