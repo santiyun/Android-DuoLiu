@@ -3,7 +3,6 @@ package com.tttrtclive.live.ui;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,11 +16,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tttrtclive.bean.EnterUserInfo;
-import com.tttrtclive.live.Helper.WEChatShare;
 import com.tttrtclive.live.Helper.WindowManager;
 import com.tttrtclive.live.LocalConfig;
 import com.tttrtclive.live.LocalConstans;
@@ -72,7 +68,6 @@ public class MainActivity extends BaseActivity {
     private PhoneListener mPhoneListener;
     private int mRole = CLIENT_ROLE_ANCHOR;
     private boolean mHasLocalView = false;
-    private WEChatShare mWEChatShare;
     private long mRoomID;
     private final Object obj = new Object();
     private boolean mIsReceiveSei;
@@ -181,53 +176,6 @@ public class MainActivity extends BaseActivity {
             mTTTEngine.switchCamera();
             mIsBackCamera = !mIsBackCamera;
         });
-
-        findViewById(R.id.main_button_share).setOnClickListener(v -> {
-            findViewById(R.id.main_share_layout).setVisibility(View.VISIBLE);
-            throw new RuntimeException("sss");
-        });
-
-        mWEChatShare = new WEChatShare(this);
-        findViewById(R.id.main_share_layout).findViewById(R.id.friend).setOnClickListener(v -> {
-            if (LocalConfig.VERSION_FLAG == LocalConstans.VERSION_WHITE) {
-                mWEChatShare.sendText(SendMessageToWX.Req.WXSceneSession, mRoomID,
-                        "http://wushuangtech.com/live.html?flv=http://pull.wushuangtech.com/sdk/" + mRoomID + ".flv&hls=http://pull.wushuangtech.com/sdk/" + mRoomID + ".m3u8");
-            } else {
-                mWEChatShare.sendText(SendMessageToWX.Req.WXSceneSession, mRoomID, getWXLink());
-            }
-            findViewById(R.id.main_share_layout).setVisibility(View.GONE);
-        });
-
-        findViewById(R.id.friend_circle).setOnClickListener(v -> {
-            if (LocalConfig.VERSION_FLAG == LocalConstans.VERSION_WHITE) {
-                mWEChatShare.sendText(SendMessageToWX.Req.WXSceneTimeline, mRoomID,
-                        "http://wushuangtech.com/live.html?flv=http://pull.wushuangtech.com/sdk/" + mRoomID + ".flv&hls=http://pull.wushuangtech.com/sdk/" + mRoomID + ".m3u8");
-            } else {
-                mWEChatShare.sendText(SendMessageToWX.Req.WXSceneSession, mRoomID, getWXLink());
-            }
-
-            findViewById(R.id.main_share_layout).setVisibility(View.GONE);
-        });
-
-        findViewById(R.id.shared_copy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                // 将文本内容放到系统剪贴板里。
-                cm.setText(getWXLink());
-                Toast.makeText(mContext, getString(R.string.ttt_copy_success), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        findViewById(R.id.local_view_layout).setOnClickListener(v -> {
-            if (findViewById(R.id.main_share_layout).getVisibility() == View.VISIBLE)
-                findViewById(R.id.main_share_layout).setVisibility(View.GONE);
-        });
-
-        findViewById(R.id.friend_circle_close).setOnClickListener(v -> {
-            findViewById(R.id.main_share_layout).setVisibility(View.GONE);
-        });
-
     }
 
     public void setTextViewContent(TextView textView, int resourceID, String value) {
@@ -239,8 +187,6 @@ public class MainActivity extends BaseActivity {
     private void initEngine() {
         mLocalBroadcast = new MyLocalBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addCategory("ttt.test.interface");
-        filter.addAction("ttt.test.interface.string");
         filter.addAction(MyTTTRtcEngineEventHandler.TAG);
         registerReceiver(mLocalBroadcast, filter);
         ((MainApplication) getApplicationContext()).mMyTTTRtcEngineEventHandler.setIsSaveCallBack(false);
@@ -279,10 +225,6 @@ public class MainActivity extends BaseActivity {
         startActivity(new Intent(mContext, SplashActivity.class));
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
-    }
-
-    public String getWXLink() {
-        return "http://3ttech.cn/3tplayer.html?flv=http://pull.3ttech.cn/sdk/" + mRoomID + ".flv&hls=http://pull.3ttech.cn/sdk/" + mRoomID + ".m3u8";
     }
 
     /**

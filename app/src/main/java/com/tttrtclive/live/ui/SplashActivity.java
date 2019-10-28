@@ -19,7 +19,6 @@ import com.tttrtclive.live.LocalConstans;
 import com.tttrtclive.live.R;
 import com.tttrtclive.live.bean.JniObjs;
 import com.tttrtclive.live.callback.MyTTTRtcEngineEventHandler;
-import com.tttrtclive.live.utils.MyLog;
 import com.tttrtclive.live.utils.SharedPreferencesUtil;
 import com.wushuangtech.library.Constants;
 import com.wushuangtech.wstechapi.TTTRtcEngine;
@@ -94,12 +93,6 @@ public class SplashActivity extends BaseActivity {
         mVersion.setText(result);
         TextView mLogoTextTV = findViewById(R.id.room_id_text);
         mLogoTextTV.setText(getString(R.string.ttt_prefix_live_channel_name) + ": ");
-
-        if (LocalConfig.VERSION_FLAG == LocalConstans.VERSION_WHITE) {
-            mVersion.setVisibility(View.INVISIBLE);
-            mSplashAppName.setVisibility(View.INVISIBLE);
-            mSplashCompany.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void init() {
@@ -114,7 +107,7 @@ public class SplashActivity extends BaseActivity {
             if (CLIENT_ROLE_ANCHOR == saveRoleValue) {
                 mHostBT.setChecked(true);
                 mAuthorBT.setChecked(false);
-            } else if(CLIENT_ROLE_BROADCASTER == saveRoleValue){
+            } else if (CLIENT_ROLE_BROADCASTER == saveRoleValue) {
                 mHostBT.setChecked(false);
                 mAuthorBT.setChecked(true);
             }
@@ -239,23 +232,10 @@ public class SplashActivity extends BaseActivity {
         LocalConfig.mLocalRole = mRole;
         String pushUrl;
         // 设置推流格式H264/H265
-        if (LocalConfig.VERSION_FLAG == LocalConstans.VERSION_WHITE) {
-            if (mEncodeType == 0) {
-                pushUrl = "rtmp://push.wushuangtech.com/sdk/" + mRoomName;
-            } else {
-                pushUrl = "rtmp://push.wushuangtech.com/sdk/" + mRoomName + "?trans=1";
-            }
-            // 4.设置服务器地址
-            if (!TextUtils.isEmpty(mLocalIP)) {
-                MyLog.d("set server address : " + mLocalIP);
-                mTTTEngine.setServerIp(String.valueOf(mLocalIP), mLocalPort);
-            }
+        if (mEncodeType == 0) {
+            pushUrl = "rtmp://push.3ttest.cn/sdk2/" + mRoomName;
         } else {
-            if (mEncodeType == 0) {
-                pushUrl = "rtmp://push.3ttech.cn/sdk/" + mRoomName;
-            } else {
-                pushUrl = "rtmp://push.3ttech.cn/sdk/" + mRoomName + "?trans=1";
-            }
+            pushUrl = "rtmp://push.3ttest.cn/sdk2/" + mRoomName + "?trans=1";
         }
         // 5.设置推流地址
         PublisherConfiguration mPublisherConfiguration = new PublisherConfiguration();

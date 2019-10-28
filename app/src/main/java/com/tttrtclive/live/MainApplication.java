@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo;
 import android.os.Environment;
 
 import com.tttrtclive.live.callback.MyTTTRtcEngineEventHandler;
-import com.tttrtclive.live.utils.CrashHandler;
 import com.wushuangtech.utils.PviewLog;
 import com.wushuangtech.wstechapi.TTTRtcEngine;
 
@@ -26,10 +25,11 @@ public class MainApplication extends Application {
         //1.设置SDK的回调接收类
         mMyTTTRtcEngineEventHandler = new MyTTTRtcEngineEventHandler(getApplicationContext());
         //2.创建SDK的实例对象
-        TTTRtcEngine mTTTEngine = TTTRtcEngine.create(getApplicationContext(), <APPID引用位置>,
+        TTTRtcEngine mTTTEngine = TTTRtcEngine.create(getApplicationContext(), <这里填APPID>,
                 false, mMyTTTRtcEngineEventHandler);
         if (mTTTEngine == null) {
             System.exit(0);
+            return;
         }
 
         if (!isApkDebugable()) {
@@ -42,8 +42,6 @@ public class MainApplication extends Application {
                 PviewLog.i("Collection log failed! , No permission!");
             }
         }
-        CrashHandler mCrashHandler = new CrashHandler(getApplicationContext());
-        mCrashHandler.init();
     }
 
     public boolean isApkDebugable() {
